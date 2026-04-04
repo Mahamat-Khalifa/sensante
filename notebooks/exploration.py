@@ -48,3 +48,6 @@ print(f"\n{'=' * 50}")
 print("Exploration terminée !")
 print("Prochain lab : entraîner un modèle ML")
 print(f"{'=' * 50}")
+# ===== EXERCICE 1 : PAR SEXE ET DIAGNOSTIC =====
+print(f"\n--- Patients par sexe et diagnostic ---")
+print(df.groupby(["sexe", "diagnostic"]).size())
