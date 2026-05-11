@@ -35,6 +35,22 @@ app = FastAPI(
     version="0.2.0"
 )
 
+# --- Lab4
+
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+
+
+
 # --- Chargement du modele (une seule fois) ---
 print("Chargement du modele...")
 model = joblib.load("models/model.pkl")
@@ -122,3 +138,9 @@ def predict(patient: PatientInput):
         confiance=confiance,
         message=messages.get(diagnostic, "Consultez un medecin.")
     )
+
+
+
+
+
+    
