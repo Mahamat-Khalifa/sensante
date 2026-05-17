@@ -280,7 +280,7 @@
 
   <!-- ══════════ FOOTER ══════════ -->
   <footer class="text-center text-slate-400 text-xs py-6 mt-4">
-    SénSanté v0.3 · ESP/UCAD · L2 GLSI 2026 · Lab 4 — Frontend Tailwind CSS
+    SénSanté v0.4 · ESP/UCAD · L2 GLSI 2026 · Lab 5 — Intégration LLM Groq
   </footer>
 
 
@@ -456,6 +456,81 @@
           maux_tete: document.getElementById("maux_tete").checked,
           region: document.getElementById("region").value
         }, null, 2);
+
+      // Lab 5 — appel automatique à /explain après l'affichage du diagnostic
+      demanderExplication(r);
+    }
+
+    // ═══════════════════════════════════════════════
+    //  EXPLICATION LLM — Lab 5
+    // ═══════════════════════════════════════════════
+    async function demanderExplication(diagnostic_data) {
+
+      // Construire l'objet à envoyer à /explain
+      const explainData = {
+        diagnostic:  diagnostic_data.diagnostic,
+        probabilite: diagnostic_data.probabilite,
+        age:         parseInt(document.getElementById("age").value),
+        sexe:        document.getElementById("sexe").value,
+        temperature: parseFloat(document.getElementById("temperature").value),
+        region:      document.getElementById("region").value
+      };
+
+      // Cibler la card résultat déjà affichée
+      const card = document.querySelector("#result-section .card-anim");
+      if (!card) return;
+
+      // Injecter le placeholder "Génération en cours..."
+      const explDiv = document.createElement("div");
+      explDiv.id = "explication-zone";
+      explDiv.innerHTML = `
+        <div class="mt-4 rounded-xl p-4 border flex items-start gap-3"
+             style="background:#F5F3FF; border-color:#C4B5FD;">
+          <span class="text-xl mt-0.5">🤖</span>
+          <div class="flex-1">
+            <p class="text-xs font-bold uppercase tracking-wider mb-1"
+               style="color:#6D28D9; font-family:'Syne',sans-serif;">
+              Explication — Llama 3 via Groq
+            </p>
+            <p class="text-sm text-slate-400 animate-pulse">Génération en cours…</p>
+          </div>
+        </div>`;
+      card.appendChild(explDiv);
+
+      try {
+        const response = await fetch(API_URL + "/explain", {
+          method:  "POST",
+          headers: { "Content-Type": "application/json" },
+          body:    JSON.stringify(explainData)
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+
+          // Remplacer le placeholder par l'explication réelle
+          explDiv.innerHTML = `
+            <div class="mt-4 rounded-xl p-4 border flex items-start gap-3"
+                 style="background:#F5F3FF; border-color:#C4B5FD;">
+              <span class="text-xl mt-0.5">🤖</span>
+              <div class="flex-1">
+                <p class="text-xs font-bold uppercase tracking-wider mb-1"
+                   style="color:#6D28D9; font-family:'Syne',sans-serif;">
+                  Explication — Llama 3 via Groq
+                </p>
+                <p class="text-sm text-slate-700 leading-relaxed">${result.explication}</p>
+                <p class="text-xs text-slate-400 mt-2">Modèle : ${result.modele_llm}</p>
+              </div>
+            </div>`;
+        }
+
+      } catch (error) {
+        // Dégradation gracieuse si /explain est indisponible
+        explDiv.innerHTML = `
+          <div class="mt-4 rounded-xl p-3 border"
+               style="background:#F8FAFC; border-color:#E2E8F0;">
+            <p class="text-xs text-slate-400">⚠️ Explication non disponible (LLM inaccessible).</p>
+          </div>`;
+      }
     }
 
     // ═══════════════════════════════════════════════
