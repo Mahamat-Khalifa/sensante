@@ -1,20 +1,27 @@
+---
+title: Sensante
+emoji: 🩺
+colorFrom: green
+colorTo: blue
+sdk: docker
+pinned: false
+short_description: Assistant pre-diagnostic medical pour le Senegal
+---
+
 # SenSante
-Assistant de pré-diagnostic médical pour le Sénégal.
 
-## Description
-SenSante utilise le Machine Learning pour aider au
-pré-diagnostic des maladies courantes (paludisme,
-grippe, typhoïde) à partir des symptômes du patient.
+Assistant pré-diagnostic médical pour le Sénégal.
 
-## Structure du projet
-- `data/` : Données patients (CSV)
-- `models/` : Modèle ML sérialisé
-- `api/` : API FastAPI
-- `frontend/` : Interface web
-- `notebooks/` : Scripts d'exploration
+## Demo en ligne
+https://mahamat-khalifa-sensante.hf.space
+
+## Stack
+- scikit-learn (modele ML)
+- FastAPI (API REST)
+- Tailwind CSS (frontend responsive)
+- Groq / Llama 3 (explication LLM)
+- Docker (conteneurisation)
 
 ## Auteur
-Mahamat Khalifa Ali Bechir - L2 GLSI_A - ESP/UCAD
-
-## Cours
-Intégration de Modèles IA - Dr. El Hadji Bassirou TOURE
+Mahamat Khalifa Ali Bechir - L2 GLSI-A - ESP/UCAD - 2026
+ENDOFFILE
